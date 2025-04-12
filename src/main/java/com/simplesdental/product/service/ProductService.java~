@@ -48,12 +48,9 @@ public class ProductService {
   @Transactional
   public ProductResponseDTO save(ProductRequestDTO productRequestDTO) {
     Category category = categoryRepository.findById(productRequestDTO.categoryId())
-        .orElseThrow(() -> new ModelNotFoundException(
-            "Categoria não encontrada", productRequestDTO.categoryId()));
-
+        .orElseThrow(() -> new ModelNotFoundException("Categoria não encontrada", 3L));
     Product product = productMapper.toEntity(productRequestDTO);
     product.setCategory(category);
-
     Product savedProduct = productRepository.save(product);
     return productMapper.toResponseDTO(savedProduct);
   }
