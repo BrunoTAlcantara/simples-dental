@@ -82,6 +82,30 @@ class ProductServiceTest {
   }
 
   @Test
+  void shouldThrowModelNotFoundWhenCategoryNotExistsOnUpdate() {
+    when(productRepository.existsById(1L)).thenReturn(true);
+    when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> productService.update(1L, requestDTO))
+        .isInstanceOf(ModelNotFoundException.class)
+        .hasMessageContaining("Categoria não encontrada");
+
+    verify(categoryRepository).findById(1L);
+  }
+
+  @Test
+  void shouldThrowModelNotFoundWhenCategoryNotExistsOnSave() {
+    when(categoryRepository.findById(requestDTO.categoryId()))
+        .thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> productService.save(requestDTO))
+        .isInstanceOf(ModelNotFoundException.class)
+        .hasMessageContaining("Categoria não encontrada");
+
+    verify(categoryRepository).findById(requestDTO.categoryId());
+  }
+
+  @Test
   void shouldThrowWhenCategoryNotFound() {
     when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -161,29 +185,5 @@ class ProductServiceTest {
     assertThatThrownBy(() -> productService.deleteById(99L))
         .isInstanceOf(EntityNotFoundException.class)
         .hasMessageContaining("Produto não encontrado");
-  }
-
-  @Test
-  void shouldThrowModelNotFoundWhenCategoryNotExistsOnSave() {
-    when(categoryRepository.findById(requestDTO.categoryId()))
-        .thenReturn(Optional.empty());
-
-    assertThatThrownBy(() -> productService.save(requestDTO))
-        .isInstanceOf(ModelNotFoundException.class)
-        .hasMessageContaining("Categoria não encontrada");
-
-    verify(categoryRepository).findById(requestDTO.categoryId());
-  }
-
-  @Test
-  void shouldThrowModelNotFoundWhenCategoryNotExistsOnUpdate() {
-    when(productRepository.existsById(1L)).thenReturn(true);
-    when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
-
-    assertThatThrownBy(() -> productService.update(1L, requestDTO))
-        .isInstanceOf(ModelNotFoundException.class)
-        .hasMessageContaining("Categoria não encontrada");
-
-    verify(categoryRepository).findById(1L);
   }
 }
