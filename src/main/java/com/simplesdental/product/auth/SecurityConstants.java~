@@ -7,7 +7,6 @@ public class SecurityConstants {
 
   public static final AntPathRequestMatcher[] PUBLIC_ENDPOINTS = {
       new AntPathRequestMatcher("/api/auth/login", HttpMethod.POST.name()),
-
   };
 
   public static final AntPathRequestMatcher[] USER_ONLY_ENDPOINTS = {

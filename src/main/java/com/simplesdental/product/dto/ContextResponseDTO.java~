@@ -14,6 +14,4 @@ public record ContextResponseDTO(
     @Schema(description = "Papel (role) do usuário", example = "USER")
     String role
 
-) {
-
-}
+) {}
