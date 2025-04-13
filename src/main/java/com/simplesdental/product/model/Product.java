@@ -31,6 +31,7 @@ public class Product {
   private BigDecimal price;
   private Boolean status;
   private String code;
+  private Integer numericCode;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "category_id")
