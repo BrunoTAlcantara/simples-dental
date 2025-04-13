@@ -1,0 +1,18 @@
+# Pasta de build do Maven
+/target/
+
+# Arquivos de log e temporários
+*.log
+*.tmp
+*.swp
+
+# Configurações específicas de IDEs
+.idea/
+*.iml
+*.classpath
+*.project
+*.settings/
+
+# Outros arquivos gerados
+.DS_Store
+Thumbs.db
