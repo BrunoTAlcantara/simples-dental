@@ -3,6 +3,7 @@ package com.simplesdental.product.service;
 import com.simplesdental.product.dto.ProductRequestDTO;
 import com.simplesdental.product.dto.ProductResponseDTO;
 import com.simplesdental.product.exception.custom.ModelNotFoundException;
+import com.simplesdental.product.logging.AppLogger;
 import com.simplesdental.product.mapper.ProductMapper;
 import com.simplesdental.product.model.Category;
 import com.simplesdental.product.model.Product;
@@ -25,11 +26,10 @@ public class ProductService {
   private final CategoryRepository categoryRepository;
 
   @Transactional(readOnly = true)
-  public ResponsePageModel<ProductResponseDTO> findAll(
-      Pageable pageable
-  ) {
+  public ResponsePageModel<ProductResponseDTO> findAll(Pageable pageable) {
     Page<Product> page = productRepository.findAll(pageable);
-
+    AppLogger.info("Listagem de produtos consultada. Page=%d, Size=%d".formatted(page.getNumber(),
+        page.getSize()));
     return new ResponsePageModel<>(
         page.getTotalElements(),
         page.getNumber(),
@@ -40,6 +40,7 @@ public class ProductService {
 
   @Transactional(readOnly = true)
   public ProductResponseDTO findById(Long id) {
+    AppLogger.info("Produto consultado. ID=" + id);
     return productRepository.findById(id)
         .map(productMapper::toResponseDTO)
         .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + id));
@@ -55,13 +56,18 @@ public class ProductService {
     product.setCategory(category);
 
     Product savedProduct = productRepository.save(product);
+
+    AppLogger.info("Produto criado. ID=" + savedProduct.getId()
+        + ", Nome=" + savedProduct.getName()
+        + ", Categoria=" + savedProduct.getCategory().getName());
+
     return productMapper.toResponseDTO(savedProduct);
   }
 
   @Transactional
   public ProductResponseDTO update(Long id, ProductRequestDTO productRequestDTO) {
     if (!productRepository.existsById(id)) {
-      throw new EntityNotFoundException("Produto " + id);
+      throw new EntityNotFoundException("Produto " + id + " não encontrado");
     }
 
     Category category = categoryRepository.findById(productRequestDTO.categoryId())
@@ -73,6 +79,11 @@ public class ProductService {
     product.setCategory(category);
 
     Product updatedProduct = productRepository.save(product);
+
+    AppLogger.info("Produto atualizado. ID=" + id
+        + ", Nome=" + updatedProduct.getName()
+        + ", Categoria=" + updatedProduct.getCategory().getName());
+
     return productMapper.toResponseDTO(updatedProduct);
   }
 
@@ -81,5 +92,6 @@ public class ProductService {
     Product product = productRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + id));
     productRepository.delete(product);
+    AppLogger.info("Produto deletado. ID=" + id + ", Nome=" + product.getName());
   }
 }

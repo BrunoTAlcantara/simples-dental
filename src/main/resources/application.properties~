@@ -23,4 +23,3 @@ spring.flyway.clean-on-validation-error=true
 spring.flyway.validate-on-migrate=false
 #LOGS
 logging.level.com.simplesdental=DEBUG
-logging.level.root=INFO

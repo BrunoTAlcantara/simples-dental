@@ -10,10 +10,10 @@ public class AppLogger {
 
   private static void log(BiConsumer<String, Throwable> logger, String msg, Throwable throwable,
       boolean isCritical) {
-    try {
-      MDC.put("userEmail", safe(UserContext.getUserEmail()));
+    try {MDC.put("userEmail", safe(UserContext.getUserEmail()));
       MDC.put("userRole", safe(UserContext.getUserRole()));
       MDC.put("userId", safe(UserContext.getUserId()));
+
 
       if (isCritical) {
         MDC.put("severity", "CRITICAL");

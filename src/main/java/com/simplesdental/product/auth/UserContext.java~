@@ -7,9 +7,7 @@ public class UserContext {
 
   public static UserDetailsImpl getAuthenticatedUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    if (auth == null || !auth.isAuthenticated()) {
-      return null;
-    }
+    if (auth == null || !auth.isAuthenticated()) return null;
 
     Object principal = auth.getPrincipal();
     return (principal instanceof UserDetailsImpl user) ? user : null;

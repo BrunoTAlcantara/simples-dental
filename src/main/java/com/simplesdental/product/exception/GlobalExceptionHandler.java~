@@ -1,5 +1,6 @@
 package com.simplesdental.product.exception;
 
+import com.simplesdental.logging.AppLogger;
 import com.simplesdental.product.exception.custom.BusinessException;
 import com.simplesdental.product.exception.custom.EmptyResultException;
 import com.simplesdental.product.exception.custom.ModelNotFoundException;
