@@ -8,8 +8,10 @@ import com.simplesdental.product.exception.errors.ApiError;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -101,6 +103,38 @@ public class GlobalExceptionHandler {
         .build();
 
     return ResponseEntity.unprocessableEntity().body(response);
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ApiError> handleBadCredentials(
+      BadCredentialsException ex,
+      HttpServletRequest request
+  ) {
+    ApiError response = ApiError.builder()
+        .timestamp(LocalDateTime.now())
+        .status(HttpStatus.UNAUTHORIZED.value())
+        .error("Não autorizado")
+        .message("E-mail ou senha incorretos")
+        .path(request.getRequestURI())
+        .build();
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+  }
+
+  @ExceptionHandler(AuthenticationException.class)
+  public ResponseEntity<ApiError> handleAuthenticationException(
+      AuthenticationException ex,
+      HttpServletRequest request
+  ) {
+    ApiError response = ApiError.builder()
+        .timestamp(LocalDateTime.now())
+        .status(HttpStatus.UNAUTHORIZED.value())
+        .error("Falha na autenticação")
+        .message("Erro ao autenticar usuário")
+        .path(request.getRequestURI())
+        .build();
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
   }
 
   @ExceptionHandler(Exception.class)
