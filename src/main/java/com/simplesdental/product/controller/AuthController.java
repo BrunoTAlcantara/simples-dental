@@ -6,6 +6,7 @@ import com.simplesdental.product.dto.AuthResponseDTO;
 import com.simplesdental.product.dto.ContextResponseDTO;
 import com.simplesdental.product.dto.UpdatePasswordDTO;
 import com.simplesdental.product.dto.UserRequestDTO;
+import com.simplesdental.product.service.AuthContextService;
 import com.simplesdental.product.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final AuthService authService;
+  private final AuthContextService authContextService;
 
   @Operation(summary = "Realizar login", description = "Autentica o usuário e retorna um token JWT")
   @ApiResponses({
@@ -69,6 +71,6 @@ public class AuthController {
   })
   @GetMapping("/context")
   public ContextResponseDTO getContext(@AuthenticationPrincipal UserDetailsImpl user) {
-    return new ContextResponseDTO(user.getId(), user.getEmail(), "USER");
+    return ResponseEntity.ok(authContextService.getContext(user.getEmail())).getBody();
   }
 }

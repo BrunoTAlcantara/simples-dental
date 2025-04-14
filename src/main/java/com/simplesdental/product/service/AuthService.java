@@ -13,6 +13,7 @@ import com.simplesdental.product.mapper.UserMapper;
 import com.simplesdental.product.model.User;
 import com.simplesdental.product.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,6 +46,7 @@ public class AuthService {
     return new AuthResponseDTO(token);
   }
 
+  @CacheEvict(value = "userContext", key = "#email")
   @Transactional
   public void updateOwnPassword(UpdatePasswordDTO dto) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
