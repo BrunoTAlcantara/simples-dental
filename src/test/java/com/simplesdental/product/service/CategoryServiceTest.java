@@ -80,7 +80,7 @@ class CategoryServiceTest {
 
     assertThatThrownBy(() -> categoryService.findById(99L))
         .isInstanceOf(EntityNotFoundException.class)
-        .hasMessageContaining("Categoria99");
+        .hasMessageContaining("Categoria 99");
   }
 
   @Test
@@ -113,7 +113,7 @@ class CategoryServiceTest {
 
     assertThatThrownBy(() -> categoryService.update(99L, requestDTO))
         .isInstanceOf(EntityNotFoundException.class)
-        .hasMessageContaining("Categoria99");
+        .hasMessageContaining("Categoria 99");
   }
 
   @Test
@@ -132,6 +132,6 @@ class CategoryServiceTest {
 
     assertThatThrownBy(() -> categoryService.deleteById(99L))
         .isInstanceOf(EntityNotFoundException.class)
-        .hasMessageContaining("Categoria99");
+        .hasMessageContaining("Categoria 99");
   }
 }
