@@ -64,9 +64,9 @@ class ProductControllerV2Test {
         requestDTO.price(),
         requestDTO.status(),
         requestDTO.code(),
-        null, // createdAt
-        null, // updatedAt
-        null  // category
+        null,
+        null,
+        null
     );
   }
 
@@ -113,16 +113,34 @@ class ProductControllerV2Test {
   }
 
   @Test
-  void shouldListPagedProductsV2() throws Exception {
+  void shouldListPagedProductsV2WithoutFilter() throws Exception {
     ResponsePageModel<ProductResponseV2DTO> responsePage = new ResponsePageModel<>(
         1, 0, 1, List.of(responseDTO)
     );
 
-    when(productService.findAll(any(PageRequest.class))).thenReturn(responsePage);
+    when(productService.findAll(eq(null), any(PageRequest.class))).thenReturn(responsePage);
 
     mockMvc.perform(get("/api/v2/products?page=0&size=10"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.totalItems").value(1))
         .andExpect(jsonPath("$.items[0].id").value(responseDTO.id()));
+  }
+
+  @Test
+  void shouldListPagedProductsV2WithNameFilter() throws Exception {
+    ResponsePageModel<ProductResponseV2DTO> responsePage = new ResponsePageModel<>(
+        1, 0, 1, List.of(responseDTO)
+    );
+
+    when(productService.findAll(eq("Produto V2"), any(PageRequest.class))).thenReturn(responsePage);
+
+    mockMvc.perform(get("/api/v2/products")
+            .param("page", "0")
+            .param("size", "10")
+            .param("name", "Produto V2"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.totalItems").value(1))
+        .andExpect(jsonPath("$.items[0].id").value(responseDTO.id()))
+        .andExpect(jsonPath("$.items[0].name").value("Produto V2"));
   }
 }

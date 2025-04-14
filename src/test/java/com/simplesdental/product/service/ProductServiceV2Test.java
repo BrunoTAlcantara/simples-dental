@@ -30,14 +30,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceV2Test {
 
   @Mock
   private ProductRepository productRepository;
+
   @Mock
   private CategoryRepository categoryRepository;
+
   @Mock
   private ProductMapper productMapper;
 
@@ -70,12 +73,12 @@ class ProductServiceV2Test {
   }
 
   @Test
-  void shouldListPagedProducts() {
+  void shouldListPagedProductsWithFilter() {
     Page<Product> page = new PageImpl<>(List.of(product));
-    when(productRepository.findAll(any(Pageable.class))).thenReturn(page);
+    when(productRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
     when(productMapper.toV2ResponseDTO(product)).thenReturn(responseDTO);
 
-    ResponsePageModel<ProductResponseV2DTO> result = productService.findAll(PageRequest.of(0, 10));
+    ResponsePageModel<ProductResponseV2DTO> result = productService.findAll("Produto", PageRequest.of(0, 10));
 
     assertThat(result.totalItems()).isEqualTo(1);
     assertThat(result.items().get(0).name()).isEqualTo("Produto Teste");

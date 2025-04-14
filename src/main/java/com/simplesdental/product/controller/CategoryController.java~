@@ -43,9 +43,10 @@ public class CategoryController {
   public ResponseEntity<ResponsePageModel<CategoryResponseDTO>> getAllCategories(
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(required = false) String name,
-      @RequestParam(defaultValue = "10") int size) {
+      @RequestParam(defaultValue = "10") int size)
+  {
     Pageable pageable = PageRequest.of(page, size);
-    ResponsePageModel<CategoryResponseDTO> result = categoryService.findAll(name, pageable);
+    ResponsePageModel<CategoryResponseDTO> result = categoryService.findAll(name,pageable);
     return ResponseEntity.ok(result);
   }
 

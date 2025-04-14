@@ -34,20 +34,21 @@ public class ProductControllerV2 {
 
   private final ProductServiceV2 productService;
 
-  @Operation(summary = "Listar todos os produtos", description = "Retorna uma lista paginada de produtos")
+  @Operation(summary = "Listar todos os produtos", description = "Retorna uma lista paginada de produtos com filtro opcional por nome")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "Produtos retornados com sucesso"),
       @ApiResponse(responseCode = "401", description = "Não autorizado"),
       @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
   })
   @GetMapping
-  @Transactional
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponsePageModel<ProductResponseV2DTO>> getAllProducts(
       @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(required = false) String name
   ) {
     Pageable pageable = PageRequest.of(page, size);
-    var result = productService.findAll(pageable);
+    var result = productService.findAll(name, pageable);
     return ResponseEntity.ok(result);
   }
 

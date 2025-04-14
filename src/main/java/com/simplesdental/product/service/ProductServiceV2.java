@@ -9,11 +9,13 @@ import com.simplesdental.product.model.Category;
 import com.simplesdental.product.model.Product;
 import com.simplesdental.product.repository.CategoryRepository;
 import com.simplesdental.product.repository.ProductRepository;
+import com.simplesdental.product.repository.specifications.ProductSpecification;
 import com.simplesdental.product.shared.ResponsePageModel;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +28,13 @@ public class ProductServiceV2 {
   private final CategoryRepository categoryRepository;
 
   @Transactional(readOnly = true)
-  public ResponsePageModel<ProductResponseV2DTO> findAll(Pageable pageable) {
-    Page<Product> page = productRepository.findAll(pageable);
-    AppLogger.info("Listagem de produtos consultada. Page=%d, Size=%d".formatted(page.getNumber(),
-        page.getSize()));
+  public ResponsePageModel<ProductResponseV2DTO> findAll(String name, Pageable pageable) {
+    Specification<Product> spec = Specification.where(ProductSpecification.nameContains(name));
+
+    Page<Product> page = productRepository.findAll(spec, pageable);
+
+    AppLogger.info("Listagem de produtos consultada. Page=%d, Size=%d".formatted(page.getNumber(), page.getSize()));
+
     return new ResponsePageModel<>(
         page.getTotalElements(),
         page.getNumber(),

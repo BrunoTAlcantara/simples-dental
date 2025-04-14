@@ -2,10 +2,7 @@ package com.simplesdental.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.simplesdental.product.dto.CategoryRequestDTO;
 import com.simplesdental.product.dto.CategoryResponseDTO;

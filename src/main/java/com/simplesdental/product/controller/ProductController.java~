@@ -1,9 +1,8 @@
 package com.simplesdental.product.controller;
 
-import com.simplesdental.product.dto.ProductRequestV2DTO;
-import com.simplesdental.product.dto.ProductRequestV2DTO;
-import com.simplesdental.product.dto.ProductResponseV2DTO;
-import com.simplesdental.product.service.ProductServiceV2;
+import com.simplesdental.product.dto.ProductRequestDTO;
+import com.simplesdental.product.dto.ProductResponseDTO;
+import com.simplesdental.product.service.ProductService;
 import com.simplesdental.product.shared.ResponsePageModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,29 +26,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Products", description = "Endpoints para gerenciamento de produtos ")
+@Tag(name = "Products", description = "Endpoints para gerenciamento de produtos")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v2/products")
-public class ProductControllerV2 {
+@RequestMapping("/api/products")
+public class ProductController {
 
-  private final ProductServiceV2 productService;
+  private final ProductService productService;
 
-  @Operation(summary = "Listar todos os produtos", description = "Retorna uma lista paginada de produtos")
+  @GetMapping
+  @Operation(summary = "Listar produtos", description = "Retorna uma lista paginada de produtos com filtros opcionais")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "Produtos retornados com sucesso"),
       @ApiResponse(responseCode = "401", description = "Não autorizado"),
-      @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+      @ApiResponse(responseCode = "500", description = "Erro interno")
   })
-  @GetMapping
   @Transactional
-  public ResponseEntity<ResponsePageModel<ProductResponseV2DTO>> getAllProducts(
+  public ResponseEntity<ResponsePageModel<ProductResponseDTO>> getAllProducts(
       @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(required = false) String name
   ) {
     Pageable pageable = PageRequest.of(page, size);
-    var result = productService.findAll(pageable);
-    return ResponseEntity.ok(result);
+    return ResponseEntity.ok(productService.findAll(name,  pageable));
   }
 
   @Operation(summary = "Buscar produto por ID", description = "Retorna os dados de um produto específico")
@@ -59,8 +58,8 @@ public class ProductControllerV2 {
       @ApiResponse(responseCode = "401", description = "Não autorizado")
   })
   @GetMapping("/{id}")
-  public ResponseEntity<ProductResponseV2DTO> getProductById(@PathVariable Long id) {
-    ProductResponseV2DTO product = productService.findById(id);
+  public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
+    ProductResponseDTO product = productService.findById(id);
     return ResponseEntity.ok().body(product);
   }
 
@@ -71,8 +70,8 @@ public class ProductControllerV2 {
       @ApiResponse(responseCode = "401", description = "Não autorizado")
   })
   @PostMapping
-  public ResponseEntity<ProductResponseV2DTO> createProduct(
-      @Valid @RequestBody ProductRequestV2DTO product) {
+  public ResponseEntity<ProductResponseDTO> createProduct(
+      @Valid @RequestBody ProductRequestDTO product) {
     return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
   }
 
@@ -83,9 +82,9 @@ public class ProductControllerV2 {
       @ApiResponse(responseCode = "400", description = "Dados inválidos")
   })
   @PutMapping("/{id}")
-  public ResponseEntity<ProductResponseV2DTO> updateProduct(
+  public ResponseEntity<ProductResponseDTO> updateProduct(
       @PathVariable Long id,
-      @Valid @RequestBody ProductRequestV2DTO product) {
+      @Valid @RequestBody ProductRequestDTO product) {
     return ResponseEntity.ok(productService.update(id, product));
   }
 

@@ -91,42 +91,42 @@ Você deve ajustar as entidades (model e SQL) de acordo com as regras abaixo:
 ## 4. Refatoração
 
 - ✔ Atualizar a entidade `Product`:
-  - ✔ Alterar o atributo `code` para o tipo inteiro.
+    - ✔ Alterar o atributo `code` para o tipo inteiro.
 - ✔ Versionamento da API:
-  - ✔ Manter o endpoint atual (v1) em `/api/products` com os códigos iniciados por `PROD-`.
-  - ✔ Criar uma nova versão (v2) em `/api/v2/products`, onde `code` é inteiro.
+    - ✔ Manter o endpoint atual (v1) em `/api/products` com os códigos iniciados por `PROD-`.
+    - ✔ Criar uma nova versão (v2) em `/api/v2/products`, onde `code` é inteiro.
 
 ## 5. Integração com Swagger
 
 - ✔ Documentar todos os endpoints com:
-  - ✔ Descrições detalhadas.
-  - ✔ Exemplos de JSON para requisições e respostas.
-  - ✔ Listagem de códigos HTTP e mensagens de erro.
+    - ✔ Descrições detalhadas.
+    - ✔ Exemplos de JSON para requisições e respostas.
+    - ✔ Listagem de códigos HTTP e mensagens de erro.
 
 ## 6. Autenticação e Gerenciamento de Usuários
 
 - ✔ Criar a tabela `users` com as colunas:
-  - ✔ `id` (chave primária com incremento automático)
-  - ✔ `name` (obrigatório)
-  - ✔ `email` (obrigatório, único e com formato válido)
-  - ✔ `password` (obrigatório)
-  - ✔ `role` (obrigatório, com valores permitidos: `admin` ou `user`)
+    - ✔ `id` (chave primária com incremento automático)
+    - ✔ `name` (obrigatório)
+    - ✔ `email` (obrigatório, único e com formato válido)
+    - ✔ `password` (obrigatório)
+    - ✔ `role` (obrigatório, com valores permitidos: `admin` ou `user`)
 - ✔ Inserir um usuário admin inicial:
-  - ✔ Email: `contato@simplesdental.com`
-  - ✔ Senha: `KMbT%5wT*R!46i@@YHqx`
+    - ✔ Email: `contato@simplesdental.com`
+    - ✔ Senha: `KMbT%5wT*R!46i@@YHqx`
 - ✔ Endpoints:
-  - ✔ `POST /auth/login` - Realiza login.
-  - ✔ `POST /auth/register` - Registra novos usuários (se permitido).
-  - ✔ `GET /auth/context` - Retorna `id`, `email` e `role` do usuário autenticado.
-  - ✔ `PUT /users/password` - Atualiza a senha do usuário autenticado.
+    - ✔ `POST /auth/login` - Realiza login.
+    - ✔ `POST /auth/register` - Registra novos usuários (se permitido).
+    - ✔ `GET /auth/context` - Retorna `id`, `email` e `role` do usuário autenticado.
+    - ✔ `PUT /users/password` - Atualiza a senha do usuário autenticado.
 
 ## 7. Permissões e Controle de Acesso
 
 - ✔ Usuários com `role` admin podem criar, alterar, consultar e excluir produtos, categorias e outros usuários.
 - ✔ Usuários com `role` user podem:
-  - ✔ Consultar produtos e categorias.
-  - ✔ Atualizar apenas sua própria senha.
-  - ✔ Não acessar ou alterar dados de outros usuários.
+    - ✔ Consultar produtos e categorias.
+    - ✔ Atualizar apenas sua própria senha.
+    - ✔ Não acessar ou alterar dados de outros usuários.
 
 ## 8. Testes
 

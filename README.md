@@ -132,6 +132,12 @@ Você deve ajustar as entidades (model e SQL) de acordo com as regras abaixo:
 
 - ✔ Desenvolver testes unitários para os módulos de autenticação, autorização e operações CRUD.
 
+## Extras
+
+- ✔ Implementar tratamento de exceções personalizados.
+- ✔ Implementar Filtros por name
+- ✔ Implementar testes de integração
+
 ---
 
 # Perguntas e Respostas

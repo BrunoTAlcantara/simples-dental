@@ -102,16 +102,34 @@ class CategoryControllerTest {
   }
 
   @Test
-  void shouldGetPagedCategories() throws Exception {
+  void shouldGetPagedCategoriesWithoutFilter() throws Exception {
     ResponsePageModel<CategoryResponseDTO> responsePage = new ResponsePageModel<>(
         1, 0, 1, List.of(responseDTO)
     );
 
-    when(categoryService.findAll(any(PageRequest.class))).thenReturn(responsePage);
+    when(categoryService.findAll(eq(null), any(PageRequest.class))).thenReturn(responsePage);
 
     mockMvc.perform(get("/api/categories?page=0&size=10"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.totalItems").value(1))
         .andExpect(jsonPath("$.items[0].id").value(responseDTO.id()));
+  }
+
+  @Test
+  void shouldGetPagedCategoriesWithNameFilter() throws Exception {
+    ResponsePageModel<CategoryResponseDTO> responsePage = new ResponsePageModel<>(
+        1, 0, 1, List.of(responseDTO)
+    );
+
+    when(categoryService.findAll(eq("Categoria Teste"), any(PageRequest.class))).thenReturn(responsePage);
+
+    mockMvc.perform(get("/api/categories")
+            .param("page", "0")
+            .param("size", "10")
+            .param("name", "Categoria Teste"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.totalItems").value(1))
+        .andExpect(jsonPath("$.items[0].id").value(responseDTO.id()))
+        .andExpect(jsonPath("$.items[0].name").value("Categoria Teste"));
   }
 }

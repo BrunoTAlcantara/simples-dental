@@ -28,7 +28,7 @@ public class ProductService {
   private final CategoryRepository categoryRepository;
 
   @Transactional(readOnly = true)
-  public ResponsePageModel<ProductResponseDTO> findAll(String name, Pageable pageable) {
+  public ResponsePageModel<ProductResponseDTO> findAll(String name,  Pageable pageable) {
     Specification<Product> spec = Specification
         .where(ProductSpecification.nameContains(name));
 

@@ -6,11 +6,13 @@ import com.simplesdental.product.logging.AppLogger;
 import com.simplesdental.product.mapper.CategoryMapper;
 import com.simplesdental.product.model.Category;
 import com.simplesdental.product.repository.CategoryRepository;
+import com.simplesdental.product.repository.specifications.CategorySpecification;
 import com.simplesdental.product.shared.ResponsePageModel;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,14 +23,15 @@ public class CategoryService {
   private final CategoryRepository categoryRepository;
   private final CategoryMapper categoryMapper;
 
-  @Transactional(readOnly = true)
-  public ResponsePageModel<CategoryResponseDTO> findAll(Pageable pageable) {
-    Page<Category> page = categoryRepository.findAll(pageable);
+  @Transactional
+  public ResponsePageModel<CategoryResponseDTO> findAll(String name, Pageable pageable) {
+    Specification<Category> spec = Specification.where(CategorySpecification.nameContains(name));
+
+    Page<Category> page = categoryRepository.findAll(spec, pageable);
     var content = page.map(categoryMapper::toResponseDTO).getContent();
-    AppLogger.info("Listagem de categorias consultada. Page=%d, Size=%d".formatted(page.getNumber(),
-        page.getSize()));
-    return new ResponsePageModel<>(page.getTotalElements(), page.getNumber(), page.getTotalPages(),
-        content);
+
+    AppLogger.info("Listagem de categorias. Page=%d, Size=%d".formatted(page.getNumber(), page.getSize()));
+    return new ResponsePageModel<>(page.getTotalElements(), page.getNumber(), page.getTotalPages(), content);
   }
 
   @Transactional(readOnly = true)
